@@ -9,7 +9,7 @@
  * ----------------------------------------------------------------------------
  */
 
-class droplets
+class digitalOcean
 {
 	private $clientId;
 	private $apiKey;
