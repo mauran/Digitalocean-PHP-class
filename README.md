@@ -5,13 +5,12 @@ This is an class for the Digital Ocean API. This is too my first experience with
 Example code
 -------
 ```php
+include('digitalocean.class.php');
+$droplet = new droplet("CLIENT_ID", "API_KEY", "DROPLET_ID");
 
-require("digitalocean.class.php");
+print_r( $droplet->listing() );
 
-$droplet = new droplet("CLIENT_ID","API_KEY");
+$droplet->setId(1000);
 
-$listing = $droplet->listing();
-
-print_r($listing)
-
+print_r( $droplet->listing() );
 ```
