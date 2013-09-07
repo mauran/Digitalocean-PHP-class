@@ -106,7 +106,6 @@ class droplets
 	{
 		$parameters = array('image_id' => $image_id);
 		return self::request('https://api.digitalocean.com/droplets/' . $id . '/restore', $parameters);
-
 	}
 
 	public function rebuild($id, $image_id)
