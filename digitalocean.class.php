@@ -8,23 +8,10 @@
  * buy me a beer in return --Mauran Muthiah
  * ----------------------------------------------------------------------------
  */
-
-<<<<<<< HEAD
-class droplet {
-
-	private $client_id;
-	private $api_key;
-
-	function __construct($client_id = "", $api_key = "") 
-	{
-=======
-
 class droplets
 {
 	private $client_id;
 	private $api_key;
-
->>>>>>> 2688d63f9e02819ce54f5d1e68b6b6f08b853273
 
 	function __construct($client_id, $api_key)
 	{
@@ -84,17 +71,6 @@ class droplets
 		return self::request('https://api.digitalocean.com/droplets/' . $id . '/reboot');
 	}
 
-<<<<<<< HEAD
-
-// Cheers to example code //
-$droplet = new droplet("CLIENT_ID","API_KEY");
-
-$listing = $droplet->listing();
-
-print_r($listing)
-
-
-=======
 	public function powercycle($id)
 	{
 		return json_decode(file_get_contents("https://api.digitalocean.com/droplets/".$id."/power_cycle/?client_id=".$this->client_id."&api_key=".$this->api_key),true);
@@ -145,5 +121,4 @@ print_r($listing)
 		return json_decode(file_get_contents("https://api.digitalocean.com/droplets/".$id."/disable_backups/?client_id=".$this->client_id."&api_key=".$this->api_key),true);
 	}
 }
->>>>>>> 2688d63f9e02819ce54f5d1e68b6b6f08b853273
 ?>
