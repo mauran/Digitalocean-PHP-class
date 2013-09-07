@@ -34,7 +34,7 @@ class droplets
 	* Internal methods
 	*/
 
-	private function request($url, $parameters)
+	private function request($url, $parameters = null)
 	{
 		// Add client and api to parameters
 		$parameters['client_id'] = $this->clientId;
