@@ -9,25 +9,36 @@
  * ----------------------------------------------------------------------------
  */
 
-
 class droplets
 {
-	private $client_id;
-	private $api_key;
+	private $clientId;
+	private $apiKey;
+	private $id;
 
 
-	function __construct($client_id, $api_key)
+	/**
+	* Construct our class
+	*/
+
+	function __construct($clientId, $apiKey, $id)
 	{
-		$this->client_id = $client_id;
-		$this->api_key = $api_key;
+		$this->clientId = $clientId;
+		$this->apiKey = $apiKey;
+		$this->id = $id;
 	}
 
+
+
+
+	/**
+	* Internal methods
+	*/
 
 	private function request($url, $parameters)
 	{
 		// Add client and api to parameters
-		$parameters['client_id'] = $this->client_id;
-		$parameters['api_key'] = $this->api_key;
+		$parameters['client_id'] = $this->clientId;
+		$parameters['api_key'] = $this->apiKey;
 
 
 		// Build parameters
@@ -47,10 +58,23 @@ class droplets
 	}
 
 
+	public function setId($newId)
+	{
+		$this->id = $newId;
+	}
+
+
+
+
+	/**
+	* DigitalOcean methods
+	*/
+
 	public function listing()
 	{
 		return self::request('https://api.digitalocean.com/droplets');
 	}
+
 
 	public function newDroplet($name, $size, $image, $region)
 	{
@@ -58,70 +82,73 @@ class droplets
 			'name' => $name,
 			'size_id' => $size,
 			'image_id' => $image,
-			'region_id' => $region;
+			'region_id' => $region
 		);
 
 		return self::request('https://api.digitalocean.com/droplets/new', $parameters);
 	}
 
-	public function id($id)
+	public function checkout()
 	{
-		return self::request('https://api.digitalocean.com/droplets/' . $id);
+		return self::request('https://api.digitalocean.com/droplets/' . $this->id);
 	}
 
-	public function reboot($id)
+	public function reboot()
 	{
-		return self::request('https://api.digitalocean.com/droplets/' . $id . '/reboot');
+		return self::request('https://api.digitalocean.com/droplets/' . $this->id . '/reboot');
 	}
 
-	public function powercycle($id)
+	public function powerCycle()
 	{
-		return json_decode(file_get_contents("https://api.digitalocean.com/droplets/".$id."/power_cycle/?client_id=".$this->client_id."&api_key=".$this->api_key),true);
+		return self::request('https://api.digitalocean.com/droplets/' . $this->id . '/power_cycle');
 	}
 
-	public function shutdown($id)
+	public function shutdown()
 	{
-		return json_decode(file_get_contents("https://api.digitalocean.com/droplets/".$id."/shutdown/?client_id=".$this->client_id."&api_key=".$this->api_key),true);
+		return self::request('https://api.digitalocean.com/droplets/' . $this->id . '/shutdown');
 	}
 
-	public function kill($id)
+	public function kill()
 	{
-		return json_decode(file_get_contents("https://api.digitalocean.com/droplets/".$id."/power_off/?client_id=".$this->client_id."&api_key=".$this->api_key),true);
+		return self::request('https://api.digitalocean.com/droplets/' . $this->id . '/power_off');
 	}
 
-	public function start($id)
+	public function start()
 	{
-		return json_decode(file_get_contents("https://api.digitalocean.com/droplets/".$id."/power_on/?client_id=".$this->client_id."&api_key=".$this->api_key),true);
+		return self::request('https://api.digitalocean.com/droplets/' . $this->id . '/power_on');
 	}
 
-	public function resetpw($id)
+	public function resetPassword()
 	{
-		return json_decode(file_get_contents("https://api.digitalocean.com/droplets/".$id."/password_reset/?client_id=".$this->client_id."&api_key=".$this->api_key),true);
+		return self::request('https://api.digitalocean.com/droplets/' . $this->id . '/password_reset');
 	}
 
-	public function snapshot($id, $snapshot_name)
+	public function snapshot($name)
 	{
-		return json_decode(file_get_contents("https://api.digitalocean.com/droplets/".$id."/snapshot/?name=".$snapshot_name."&client_id=".$this->client_id."&api_key=".$this->api_key),true);
+		$parameters = array('snapshot_name' => $name);
+		return self::request('https://api.digitalocean.com/droplets/' . $this->id . '/snapshot', $parameters);
 	}
 
-	public function restore($id, $image_id)
+	public function restore($imageId)
 	{
-		return json_decode(file_get_contents("https://api.digitalocean.com/droplets/".$id."/restore/?image_id=".$image_id."&client_id=".$this->client_id."&api_key=".$this->api_key),true);
+		$parameters = array('image_id' => $imageId);
+		return self::request('https://api.digitalocean.com/droplets/' . $this->id . '/restore', $parameters);
 	}
 
-	public function rebuild($id, $image_id)
+	public function rebuild($imageId)
 	{
-		return json_decode(file_get_contents("https://api.digitalocean.com/droplets/".$id."/rebuild/?image_id=".$image_id."&client_id=".$this->client_id."&api_key=".$this->api_key),true);
+		$parameters = array('image_id' => $imageId);
+		return self::request('https://api.digitalocean.com/droplets/' . $this->id . '/rebuild', $parameters);
 	}
 
-	public function enbackup($id)
+	public function enableBackup()
 	{
-		return json_decode(file_get_contents("https://api.digitalocean.com/droplets/".$id."/enable_backups/?client_id=".$this->client_id."&api_key=".$this->api_key),true);
+		return self::request('https://api.digitalocean.com/droplets/' . $this->id . '/enable_backups');
 	}
 
-	public function disbackup($id)
+	public function disableBackup()
 	{
-		return json_decode(file_get_contents("https://api.digitalocean.com/droplets/".$id."/disable_backups/?client_id=".$this->client_id."&api_key=".$this->api_key),true);
+		return self::request('https://api.digitalocean.com/droplets/' . $this->id . '/disable_backups');
 	}
 }
 ?>
