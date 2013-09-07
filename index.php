@@ -1,12 +1,12 @@
 <?php
 include('digitalocean.class.php');
-$droplet = new droplet("CLIENT_ID", "API_KEY", "DROPLET_ID");
+$servers = new digitalOcean("CLIENT_ID", "API_KEY", "DROPLET_ID");
 
 
-print_r( $droplet->listing() );
-print_r( $droplet->checkout() );
+print_r( $servers->listing() );
+print_r( $servers->checkout() );
 
 
-$droplet->setId(1000);
-print_r( $droplet->checkout() );
+$servers->setId(1000);
+print_r( $servers->checkout() );
 ?>
