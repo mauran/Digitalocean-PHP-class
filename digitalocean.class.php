@@ -9,13 +9,13 @@
  * ----------------------------------------------------------------------------
  */
 
-
 class droplet {
 
 	private $client_id;
 	private $api_key;
 
-	function __construct($client_id = "", $api_key = "") {
+	function __construct($client_id = "", $api_key = "") 
+	{
 
 		$this->client_id = $client_id;
 		$this->api_key = $api_key;
@@ -95,6 +95,7 @@ class droplet {
 }
 
 
+// Cheers to example code //
 $droplet = new droplet("CLIENT_ID","API_KEY");
 
 $listing = $droplet->listing();
