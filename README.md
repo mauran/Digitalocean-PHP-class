@@ -1,4 +1,4 @@
-Digital Ocean PHP class
+DigitalOcean PHP class
 ============
 This is an class for the Digital Ocean API. This is too my first experience with OOP PHP. Feel free to use my class or to send a pull request. :)
 
