@@ -10,7 +10,7 @@
  */
 
 
-class droplets {
+class droplet {
 
 	private $client_id;
 	private $api_key;
@@ -93,5 +93,13 @@ class droplets {
 		}
 
 }
+
+
+$droplet = new droplet("CLIENT_ID","API_KEY");
+
+$listing = $droplet->listing();
+
+print_r($listing)
+
 
 ?>
