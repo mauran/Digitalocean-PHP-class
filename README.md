@@ -1,6 +1,6 @@
 DigitalOcean PHP class
 ============
-This is a PHP class for the DigitalOcean API. This is also my first experience with OOP PHP. Feel free to use my class or to send a pull request. :)
+This is a PHP class for the DigitalOcean API. This is also my first experience with OOP PHP. Feel free to use my class or to send a pull request. :smile:
 
 Example code
 -------
