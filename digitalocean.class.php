@@ -80,7 +80,7 @@ class digitalOcean
 			return false;
 		}else{
 
-			$parameters = array('name' => $name, 'size_id' => $size, 'image_id' => $image, 'region_id' => $region);
+			$parameters = array('name' => $name, 'size_id' => $sizeId, 'image_id' => $imageId, 'region_id' => $regionId);
 			return self::request('/droplets/new', $parameters);
 
 		}
