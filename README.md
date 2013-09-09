@@ -6,13 +6,30 @@ Example code
 -------
 ```php
 include('digitalocean.class.php');
-$servers = new digitalOcean("CLIENT_ID", "API_KEY", "DROPLET_ID");
+$servers = new digitalOcean('CLIENT_ID', 'API_KEY');
 
 
-print_r( $servers->listing() );
-print_r( $servers->checkout() );
+// Get all droplets
+print_r( $servers->droplets() );
 
 
-$servers->setId(1000);
-print_r( $servers->checkout() );
+// Checkout droplet
+print_r( $servers->checkoutDroplet(1000) );
+print_r( $servers->checkoutDroplet(1001) );
+
+
+// Get all sizes
+print_r( $servers->sizes() );
+// Validate size
+var_dump( $servers->validateSize(60) );
+// Validate size
+var_dump( $servers->validateSize(10101010101010) );
+
+
+// Get all images
+print_r( $servers->images() );
+// Validate image
+var_dump( $servers->validateImage(682275) );
+// Validate image
+var_dump( $servers->validateImage(10101010101010) );
 ```

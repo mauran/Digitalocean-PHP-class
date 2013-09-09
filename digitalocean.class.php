@@ -11,22 +11,20 @@
 
 class digitalOcean
 {
-	private $baseprot = 'https://';
-	private $baseurl = 'api.digitalocean.com';
+	private $baseurl = 'https://api.digitalocean.com';
+
 	private $clientId;
 	private $apiKey;
-	private $id;
 
 
 	/**
 	* Construct our class
 	*/
 
-	function __construct($clientId, $apiKey, $id)
+	function __construct($clientId, $apiKey)
 	{
 		$this->clientId = $clientId;
 		$this->apiKey = $apiKey;
-		$this->id = $id;
 	}
 
 
@@ -48,7 +46,7 @@ class digitalOcean
 
 
 		// Make request
-		$response = file_get_contents($this->baseprot . $this->baseurl . $file . '/?' . $parameters);
+		$response = file_get_contents($this->baseurl . $file . '/?' . $parameters);
 
 
 		// Decode JSON
@@ -60,90 +58,234 @@ class digitalOcean
 	}
 
 
-	public function setId($newId)
+
+
+	/**
+	* Droplets
+	*/
+
+	public function droplets()
 	{
-		$this->id = $newId;
+		return self::request('/droplets');
+	}
+
+	public function newDroplet($name, $sizeId, $imageId, $regionId)
+	{
+		// Validate informations
+		if(self::validateSize($sizeId) == false) {
+			return false;
+		}elseif(self::validateImage($imageId) == false) {
+			return false;
+		}elseif(self::validateRegion($regionId) == false) {
+			return false;
+		}else{
+
+			$parameters = array('name' => $name, 'size_id' => $size, 'image_id' => $image, 'region_id' => $region);
+			return self::request('/droplets/new', $parameters);
+
+		}
+	}
+
+	public function checkoutDroplet($id)
+	{
+		return self::request('/droplets/' . $id);
+	}
+
+	public function rebootDroplet($id)
+	{
+		return self::request('/droplets/' . $id . '/reboot');
+	}
+
+	public function powerCycleDroplet($id)
+	{
+		return self::request('/droplets/' . $id . '/power_cycle');
+	}
+
+	public function shutdownDroplet($id)
+	{
+		return self::request('/droplets/' . $id . '/shutdown');
+	}
+
+	public function powerOffDroplet($id)
+	{
+		return self::request('/droplets/' . $id . '/power_off');
+	}
+
+	public function powerOnDroplet($id)
+	{
+		return self::request('/droplets/' . $id . '/power_on');
+	}
+
+	public function resetPasswordDroplet($id)
+	{
+		return self::request('/droplets/' . $id . '/password_reset');
+	}
+
+	public function resizeDroplet($id, $sizeId)
+	{
+		if(self::validateSize($sizeId) == false) {
+			return false;
+		}else{
+
+			$parameters = array('size_id' => $sizeId);
+			return self::request('/droplets/' . $id . '/resize', $parameters);
+
+		}
+	}
+
+	public function snapshotDroplet($id, $name)
+	{
+		$parameters = array('snapshot_name' => $name);
+		return self::request('/droplets/' . $id . '/snapshot', $parameters);
+	}
+
+	public function restoreDroplet($id, $imageId)
+	{
+		if(self::validateImage($imageId) == false) {
+			return false;
+		}else{
+
+			$parameters = array('image_id' => $imageId);
+			return self::request('/droplets/' . $id . '/restore', $parameters);
+
+		}
+	}
+
+	public function rebuildDroplet($id, $imageId)
+	{
+		if(self::validateImage($imageId) == false) {
+			return false;
+		}else{
+
+			$parameters = array('image_id' => $imageId);
+			return self::request('/droplets/' . $id . '/rebuild', $parameters);
+
+		}
+	}
+
+	public function enableBackupDroplet($id)
+	{
+		return self::request('/droplets/' . $id . '/enable_backups');
+	}
+
+	public function disableBackupDroplet($id)
+	{
+		return self::request('/droplets/' . $id . '/disable_backups');
+	}
+
+	public function renameDroplet($id, $name)
+	{
+		$parameters = array('name' => $name);
+		return self::request('/droplets/' . $id . '/rename', $parameters);
+	}
+
+	public function destroyDroplet($id)
+	{
+		return self::request('/droplets/' . $id . '/rename');
 	}
 
 
 
 
 	/**
-	* DigitalOcean methods
+	* Regions
 	*/
 
-	public function listing()
+	public function regions()
 	{
-		return self::request('/droplets');
+		return self::request('/regions');
 	}
 
-	public function newDroplet($name, $size, $image, $region)
+	public function validateRegion($regionId)
 	{
-		$parameters = array('name' => $name, 'size_id' => $size, 'image_id' => $image, 'region_id' => $region);
-		return self::request('/droplets/new', $parameters);
+		$found = false;
+
+		$regions = self::regions();
+		$regions = $regions['regions'];
+
+		// Run through regions
+		foreach($regions as $value)
+		{
+			if($value['id'] == $regionId)
+				$found = true;
+		}
+
+		return $found;
 	}
 
-	public function checkout()
+
+
+
+	/**
+	* Images
+	*/
+
+	public function images($filter = '')
 	{
-		return self::request('/droplets/' . $this->id);
+		if($filter)
+		{
+			$parameters = array('filter' => $filter);
+		}
+
+		return self::request('/images', $parameters);
 	}
 
-	public function reboot()
+	public function checkoutImage($imageId)
 	{
-		return self::request('/droplets/' . $this->id . '/reboot');
+		return self::request('/images/' . $imageId);
 	}
 
-	public function powerCycle()
+	public function destroyImage($imageId)
 	{
-		return self::request('/droplets/' . $this->id . '/power_cycle');
+		return self::request('/images/' . $imageId . '/destroy');
 	}
 
-	public function shutdown()
+	public function transferImage($imageId)
 	{
-		return self::request('/droplets/' . $this->id . '/shutdown');
+		return self::request('/images/' . $imageId . '/transfer');
 	}
 
-	public function kill()
+	public function validateImage($imageId)
 	{
-		return self::request('/droplets/' . $this->id . '/power_off');
+		$found = false;
+
+		$checkoutImage = self::checkoutImage($imageId);
+
+		if($checkoutImage['status'] == 'OK')
+		{
+			$found = true;
+		}
+
+		return $found;
 	}
 
-	public function start()
+
+
+
+	/**
+	* Sizes
+	*/
+
+	public function sizes()
 	{
-		return self::request('/droplets/' . $this->id . '/power_on');
+		return self::request('/sizes');
 	}
 
-	public function resetPassword()
+	public function validateSize($sizeId)
 	{
-		return self::request('/droplets/' . $this->id . '/password_reset');
-	}
+		$found = false;
 
-	public function snapshot($name)
-	{
-		$parameters = array('snapshot_name' => $name);
-		return self::request('/droplets/' . $this->id . '/snapshot', $parameters);
-	}
+		$sizes = self::sizes();
+		$sizes = $sizes['sizes'];
 
-	public function restore($imageId)
-	{
-		$parameters = array('image_id' => $imageId);
-		return self::request('/droplets/' . $this->id . '/restore', $parameters);
-	}
+		// Run through sizes
+		foreach($sizes as $value)
+		{
+			if($value['id'] == $sizeId)
+				$found = true;
+		}
 
-	public function rebuild($imageId)
-	{
-		$parameters = array('image_id' => $imageId);
-		return self::request('/droplets/' . $this->id . '/rebuild', $parameters);
-	}
-
-	public function enableBackup()
-	{
-		return self::request('/droplets/' . $this->id . '/enable_backups');
-	}
-
-	public function disableBackup()
-	{
-		return self::request('/droplets/' . $this->id . '/disable_backups');
+		return $found;
 	}
 }
 ?>
