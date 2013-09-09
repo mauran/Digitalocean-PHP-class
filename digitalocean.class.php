@@ -181,7 +181,7 @@ class digitalOcean
 
 	public function destroyDroplet($id)
 	{
-		return self::request('/droplets/' . $id . '/rename');
+		return self::request('/droplets/' . $id . '/destroy');
 	}
 
 
