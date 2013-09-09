@@ -86,102 +86,116 @@ class digitalOcean
 		}
 	}
 
-	public function checkoutDroplet($id)
+	public function checkoutDroplet($dropletId)
 	{
-		return self::request('/droplets/' . $id);
+		return self::request('/droplets/' . $dropletId);
 	}
 
-	public function rebootDroplet($id)
+	public function rebootDroplet($dropletId)
 	{
-		return self::request('/droplets/' . $id . '/reboot');
+		return self::request('/droplets/' . $dropletId . '/reboot');
 	}
 
-	public function powerCycleDroplet($id)
+	public function powerCycleDroplet($dropletId)
 	{
-		return self::request('/droplets/' . $id . '/power_cycle');
+		return self::request('/droplets/' . $dropletId . '/power_cycle');
 	}
 
-	public function shutdownDroplet($id)
+	public function shutdownDroplet($dropletId)
 	{
-		return self::request('/droplets/' . $id . '/shutdown');
+		return self::request('/droplets/' . $dropletId . '/shutdown');
 	}
 
-	public function powerOffDroplet($id)
+	public function powerOffDroplet($dropletId)
 	{
-		return self::request('/droplets/' . $id . '/power_off');
+		return self::request('/droplets/' . $dropletId . '/power_off');
 	}
 
-	public function powerOnDroplet($id)
+	public function powerOnDroplet($dropletId)
 	{
-		return self::request('/droplets/' . $id . '/power_on');
+		return self::request('/droplets/' . $dropletId . '/power_on');
 	}
 
-	public function resetPasswordDroplet($id)
+	public function resetPasswordDroplet($dropletId)
 	{
-		return self::request('/droplets/' . $id . '/password_reset');
+		return self::request('/droplets/' . $dropletId . '/password_reset');
 	}
 
-	public function resizeDroplet($id, $sizeId)
+	public function resizeDroplet($dropletId, $sizeId)
 	{
 		if(self::validateSize($sizeId) == false) {
 			return false;
 		}else{
 
 			$parameters = array('size_id' => $sizeId);
-			return self::request('/droplets/' . $id . '/resize', $parameters);
+			return self::request('/droplets/' . $dropletId . '/resize', $parameters);
 
 		}
 	}
 
-	public function snapshotDroplet($id, $name)
+	public function snapshotDroplet($dropletId, $name)
 	{
 		$parameters = array('snapshot_name' => $name);
-		return self::request('/droplets/' . $id . '/snapshot', $parameters);
+		return self::request('/droplets/' . $dropletId . '/snapshot', $parameters);
 	}
 
-	public function restoreDroplet($id, $imageId)
+	public function restoreDroplet($dropletId, $imageId)
 	{
 		if(self::validateImage($imageId) == false) {
 			return false;
 		}else{
 
 			$parameters = array('image_id' => $imageId);
-			return self::request('/droplets/' . $id . '/restore', $parameters);
+			return self::request('/droplets/' . $dropletId . '/restore', $parameters);
 
 		}
 	}
 
-	public function rebuildDroplet($id, $imageId)
+	public function rebuildDroplet($dropletId, $imageId)
 	{
 		if(self::validateImage($imageId) == false) {
 			return false;
 		}else{
 
 			$parameters = array('image_id' => $imageId);
-			return self::request('/droplets/' . $id . '/rebuild', $parameters);
+			return self::request('/droplets/' . $dropletId . '/rebuild', $parameters);
 
 		}
 	}
 
-	public function enableBackupDroplet($id)
+	public function enableBackupDroplet($dropletId)
 	{
-		return self::request('/droplets/' . $id . '/enable_backups');
+		return self::request('/droplets/' . $dropletId . '/enable_backups');
 	}
 
-	public function disableBackupDroplet($id)
+	public function disableBackupDroplet($dropletId)
 	{
-		return self::request('/droplets/' . $id . '/disable_backups');
+		return self::request('/droplets/' . $dropletId . '/disable_backups');
 	}
 
-	public function renameDroplet($id, $name)
+	public function renameDroplet($dropletId, $name)
 	{
 		$parameters = array('name' => $name);
-		return self::request('/droplets/' . $id . '/rename', $parameters);
+		return self::request('/droplets/' . $dropletId . '/rename', $parameters);
 	}
 
-	public function destroyDroplet($id)
+	public function destroyDroplet($dropletId)
 	{
-		return self::request('/droplets/' . $id . '/destroy');
+		return self::request('/droplets/' . $dropletId . '/destroy');
+	}
+
+	public function validateDroplet($dropletId)
+	{
+		$found = false;
+
+		$checkoutDroplet = self::checkoutDroplet($dropletId);
+
+		if($checkoutDroplet['status'] == 'OK')
+		{
+			$found = true;
+		}
+
+		return $found;
 	}
 
 
