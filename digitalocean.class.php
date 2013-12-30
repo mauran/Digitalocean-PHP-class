@@ -81,11 +81,14 @@ class digitalOcean
 		}else{
 
 			$parameters = array('name' => $name, 'size_id' => $sizeId, 'image_id' => $imageId, 'region_id' => $regionId);
-            
-            // Optional
-            if (!is_null($ssh_key_ids)) $parameters['ssh_key_ids'] = $ssh_key_ids;
-            if (!is_null($private_networking)) $parameters['private_networking'] = $private_networking;
-            
+
+			// Optional
+			if(!is_null($ssh_key_ids))
+				$parameters['ssh_key_ids'] = $ssh_key_ids;
+
+			if(!is_null($private_networking))
+				$parameters['private_networking'] = $private_networking;
+
 			return self::request('/droplets/new', $parameters);
 
 		}
@@ -186,9 +189,8 @@ class digitalOcean
 
 	public function destroyDroplet($dropletId)
 	{
-        // This is forced on, because there is no good reason to not have this.
-        $parameters = array("scrub_data" => true);
-		return self::request('/droplets/' . $dropletId . '/destroy', $parameters);
+		// Scrub data per default
+		return self::request('/droplets/' . $dropletId . '/destroy', array("scrub_data" => true));
 	}
 
 	public function validateDroplet($dropletId)
@@ -243,7 +245,7 @@ class digitalOcean
 
 	public function images($filter = '')
 	{
-        $parameters = array();
+		$parameters = array();
 		if($filter)
 		{
 			$parameters = array('filter' => $filter);
@@ -309,46 +311,48 @@ class digitalOcean
 
 		return $found;
 	}
-    
-    
-    
-    /**
-    * SSH Keys
-    */
 
-    public function keys()
-    {
-        return self::request('/ssh_keys');
-    }    
-    
-    public function newKey($name, $ssh_pub_key)
-    {
-        $parameters = array('name' => $name, 'ssh_pub_key' => $ssh_pub_key);
-        return self::request('/ssh_keys/new', $parameters);
-    }
-    
-    public function checkoutKey($id)
-    {
-        return self::request('/ssh_keys/' . $id);
-    }
-    
-    public function editKey($id, $ssh_pub_key)
-    {
-        $parameters = array('ssh_pub_key' => $ssh_pub_key);
-        return self::request('/ssh_keys/' . $id . '/edit', $parameters);
-    }    
-    
-    public function destroyKey($id)
-    {
-        return self::request('/ssh_keys/' . $id . '/destroy');
-    }    
-         
-         
-    /**
-    * Events
-    */
-    
-    public function checkoutEvent($id) {
-        return self::request('/events/' . $id);
-    }         
-} 
+
+
+
+	/**
+	* SSH Keys
+	*/
+
+	public function keys()
+	{
+		return self::request('/ssh_keys');
+	}
+
+	public function newKey($name, $ssh_pub_key)
+	{
+		$parameters = array('name' => $name, 'ssh_pub_key' => $ssh_pub_key);
+		return self::request('/ssh_keys/new', $parameters);
+	}
+
+	public function checkoutKey($id)
+	{
+		return self::request('/ssh_keys/' . $id);
+	}
+
+	public function editKey($id, $ssh_pub_key)
+	{
+		$parameters = array('ssh_pub_key' => $ssh_pub_key);
+		return self::request('/ssh_keys/' . $id . '/edit', $parameters);
+	}
+
+	public function destroyKey($id)
+	{
+		return self::request('/ssh_keys/' . $id . '/destroy');
+	}
+
+
+	/**
+	* Events
+	*/
+
+	public function checkoutEvent($id)
+	{
+		return self::request('/events/' . $id);
+	}
+}
