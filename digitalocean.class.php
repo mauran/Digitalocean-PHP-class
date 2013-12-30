@@ -11,307 +11,310 @@
 
 class digitalOcean
 {
-	private $baseurl = 'https://api.digitalocean.com';
+    private $baseurl = 'https://api.digitalocean.com';
 
-	private $clientId;
-	private $apiKey;
-
-
-	/**
-	* Construct our class
-	*/
-
-	function __construct($clientId, $apiKey)
-	{
-		$this->clientId = $clientId;
-		$this->apiKey = $apiKey;
-	}
+    private $clientId;
+    private $apiKey;
 
 
+    /**
+    * Construct our class
+    */
 
-
-	/**
-	* Internal methods
-	*/
-
-	private function request($file, $parameters = null)
-	{
-		// Add client and api to parameters
-		$parameters['client_id'] = $this->clientId;
-		$parameters['api_key'] = $this->apiKey;
-
-
-		// Build parameters
-		$parameters = http_build_query($parameters);
-
-
-		// Make request
-		$response = file_get_contents($this->baseurl . $file . '/?' . $parameters);
-
-
-		// Decode JSON
-		$response = json_decode($response, true);
-
-
-		// Return answer
-		return $response;
-	}
+    function __construct($clientId, $apiKey)
+    {
+        $this->clientId = $clientId;
+        $this->apiKey = $apiKey;
+    }
 
 
 
 
-	/**
-	* Droplets
-	*/
+    /**
+    * Internal methods
+    */
 
-	public function droplets()
-	{
-		return self::request('/droplets');
-	}
+    private function request($file, $parameters = null)
+    {
+        // Add client and api to parameters
+        $parameters['client_id'] = $this->clientId;
+        $parameters['api_key'] = $this->apiKey;
 
-	public function newDroplet($name, $sizeId, $imageId, $regionId, $ssh_key_ids = null, $private_networking = null)
-	{
-		// Validate informations
-		if(self::validateSize($sizeId) == false) {
-			return false;
-		}elseif(self::validateImage($imageId) == false) {
-			return false;
-		}elseif(self::validateRegion($regionId) == false) {
-			return false;
-		}else{
 
-			$parameters = array('name' => $name, 'size_id' => $sizeId, 'image_id' => $imageId, 'region_id' => $regionId);
-            
+        // Build parameters
+        $parameters = http_build_query($parameters);
+
+
+        // Make request
+        $response = file_get_contents($this->baseurl . $file . '/?' . $parameters);
+
+
+        // Decode JSON
+        $response = json_decode($response, true);
+
+
+        // Return answer
+        return $response;
+    }
+
+
+
+
+    /**
+    * Droplets
+    */
+
+    public function droplets()
+    {
+        return self::request('/droplets');
+    }
+
+    public function newDroplet($name, $sizeId, $imageId, $regionId, $ssh_key_ids = null, $private_networking = null)
+    {
+        // Validate informations
+        if(self::validateSize($sizeId) == false) {
+            return false;
+        }elseif(self::validateImage($imageId) == false) {
+            return false;
+        }elseif(self::validateRegion($regionId) == false) {
+            return false;
+        }else{
+
+            $parameters = array('name' => $name, 'size_id' => $sizeId, 'image_id' => $imageId, 'region_id' => $regionId);
+
             // Optional
-            if (!is_null($ssh_key_ids)) $parameters['ssh_key_ids'] = $ssh_key_ids;
-            if (!is_null($private_networking)) $parameters['private_networking'] = $private_networking;
-            
-			return self::request('/droplets/new', $parameters);
+            if(!is_null($ssh_key_ids))
+                $parameters['ssh_key_ids'] = $ssh_key_ids;
 
-		}
-	}
+            if(!is_null($private_networking))
+                $parameters['private_networking'] = $private_networking;
 
-	public function checkoutDroplet($dropletId)
-	{
-		return self::request('/droplets/' . $dropletId);
-	}
+            return self::request('/droplets/new', $parameters);
 
-	public function rebootDroplet($dropletId)
-	{
-		return self::request('/droplets/' . $dropletId . '/reboot');
-	}
+        }
+    }
 
-	public function powerCycleDroplet($dropletId)
-	{
-		return self::request('/droplets/' . $dropletId . '/power_cycle');
-	}
+    public function checkoutDroplet($dropletId)
+    {
+        return self::request('/droplets/' . $dropletId);
+    }
 
-	public function shutdownDroplet($dropletId)
-	{
-		return self::request('/droplets/' . $dropletId . '/shutdown');
-	}
+    public function rebootDroplet($dropletId)
+    {
+        return self::request('/droplets/' . $dropletId . '/reboot');
+    }
 
-	public function powerOffDroplet($dropletId)
-	{
-		return self::request('/droplets/' . $dropletId . '/power_off');
-	}
+    public function powerCycleDroplet($dropletId)
+    {
+        return self::request('/droplets/' . $dropletId . '/power_cycle');
+    }
 
-	public function powerOnDroplet($dropletId)
-	{
-		return self::request('/droplets/' . $dropletId . '/power_on');
-	}
+    public function shutdownDroplet($dropletId)
+    {
+        return self::request('/droplets/' . $dropletId . '/shutdown');
+    }
 
-	public function resetPasswordDroplet($dropletId)
-	{
-		return self::request('/droplets/' . $dropletId . '/password_reset');
-	}
+    public function powerOffDroplet($dropletId)
+    {
+        return self::request('/droplets/' . $dropletId . '/power_off');
+    }
 
-	public function resizeDroplet($dropletId, $sizeId)
-	{
-		if(self::validateSize($sizeId) == false) {
-			return false;
-		}else{
+    public function powerOnDroplet($dropletId)
+    {
+        return self::request('/droplets/' . $dropletId . '/power_on');
+    }
 
-			$parameters = array('size_id' => $sizeId);
-			return self::request('/droplets/' . $dropletId . '/resize', $parameters);
+    public function resetPasswordDroplet($dropletId)
+    {
+        return self::request('/droplets/' . $dropletId . '/password_reset');
+    }
 
-		}
-	}
+    public function resizeDroplet($dropletId, $sizeId)
+    {
+        if(self::validateSize($sizeId) == false) {
+            return false;
+        }else{
 
-	public function snapshotDroplet($dropletId, $name)
-	{
-		$parameters = array('snapshot_name' => $name);
-		return self::request('/droplets/' . $dropletId . '/snapshot', $parameters);
-	}
+            $parameters = array('size_id' => $sizeId);
+            return self::request('/droplets/' . $dropletId . '/resize', $parameters);
 
-	public function restoreDroplet($dropletId, $imageId)
-	{
-		if(self::validateImage($imageId) == false) {
-			return false;
-		}else{
+        }
+    }
 
-			$parameters = array('image_id' => $imageId);
-			return self::request('/droplets/' . $dropletId . '/restore', $parameters);
+    public function snapshotDroplet($dropletId, $name)
+    {
+        $parameters = array('name' => $name);
+        return self::request('/droplets/' . $dropletId . '/snapshot', $parameters);
+    }
 
-		}
-	}
+    public function restoreDroplet($dropletId, $imageId)
+    {
+        if(self::validateImage($imageId) == false) {
+            return false;
+        }else{
 
-	public function rebuildDroplet($dropletId, $imageId)
-	{
-		if(self::validateImage($imageId) == false) {
-			return false;
-		}else{
+            $parameters = array('image_id' => $imageId);
+            return self::request('/droplets/' . $dropletId . '/restore', $parameters);
 
-			$parameters = array('image_id' => $imageId);
-			return self::request('/droplets/' . $dropletId . '/rebuild', $parameters);
+        }
+    }
 
-		}
-	}
+    public function rebuildDroplet($dropletId, $imageId)
+    {
+        if(self::validateImage($imageId) == false) {
+            return false;
+        }else{
 
-	public function enableBackupDroplet($dropletId)
-	{
-		return self::request('/droplets/' . $dropletId . '/enable_backups');
-	}
+            $parameters = array('image_id' => $imageId);
+            return self::request('/droplets/' . $dropletId . '/rebuild', $parameters);
 
-	public function disableBackupDroplet($dropletId)
-	{
-		return self::request('/droplets/' . $dropletId . '/disable_backups');
-	}
+        }
+    }
 
-	public function renameDroplet($dropletId, $name)
-	{
-		$parameters = array('name' => $name);
-		return self::request('/droplets/' . $dropletId . '/rename', $parameters);
-	}
+    public function enableBackupDroplet($dropletId)
+    {
+        return self::request('/droplets/' . $dropletId . '/enable_backups');
+    }
 
-	public function destroyDroplet($dropletId)
-	{
-        // This is forced on, because there is no good reason to not have this.
-        $parameters = array("scrub_data" => true);
-		return self::request('/droplets/' . $dropletId . '/destroy', $parameters);
-	}
+    public function disableBackupDroplet($dropletId)
+    {
+        return self::request('/droplets/' . $dropletId . '/disable_backups');
+    }
 
-	public function validateDroplet($dropletId)
-	{
-		$found = false;
+    public function renameDroplet($dropletId, $name)
+    {
+        $parameters = array('name' => $name);
+        return self::request('/droplets/' . $dropletId . '/rename', $parameters);
+    }
 
-		$checkoutDroplet = self::checkoutDroplet($dropletId);
+    public function destroyDroplet($dropletId)
+    {
+        // Scrub data per default
+        return self::request('/droplets/' . $dropletId . '/destroy', array("scrub_data" => true));
+    }
 
-		if($checkoutDroplet['status'] == 'OK')
-		{
-			$found = true;
-		}
+    public function validateDroplet($dropletId)
+    {
+        $found = false;
 
-		return $found;
-	}
+        $checkoutDroplet = self::checkoutDroplet($dropletId);
 
+        if($checkoutDroplet['status'] == 'OK')
+        {
+            $found = true;
+        }
 
-
-
-	/**
-	* Regions
-	*/
-
-	public function regions()
-	{
-		return self::request('/regions');
-	}
-
-	public function validateRegion($regionId)
-	{
-		$found = false;
-
-		$regions = self::regions();
-		$regions = $regions['regions'];
-
-		// Run through regions
-		foreach($regions as $value)
-		{
-			if($value['id'] == $regionId)
-				$found = true;
-		}
-
-		return $found;
-	}
+        return $found;
+    }
 
 
 
 
-	/**
-	* Images
-	*/
+    /**
+    * Regions
+    */
 
-	public function images($filter = '')
-	{
+    public function regions()
+    {
+        return self::request('/regions');
+    }
+
+    public function validateRegion($regionId)
+    {
+        $found = false;
+
+        $regions = self::regions();
+        $regions = $regions['regions'];
+
+        // Run through regions
+        foreach($regions as $value)
+        {
+            if($value['id'] == $regionId)
+                $found = true;
+        }
+
+        return $found;
+    }
+
+
+
+
+    /**
+    * Images
+    */
+
+    public function images($filter = '')
+    {
         $parameters = array();
-		if($filter)
-		{
-			$parameters = array('filter' => $filter);
-		}
+        if($filter)
+        {
+            $parameters = array('filter' => $filter);
+        }
 
-		return self::request('/images', $parameters);
-	}
+        return self::request('/images', $parameters);
+    }
 
-	public function checkoutImage($imageId)
-	{
-		return self::request('/images/' . $imageId);
-	}
+    public function checkoutImage($imageId)
+    {
+        return self::request('/images/' . $imageId);
+    }
 
-	public function destroyImage($imageId)
-	{
-		return self::request('/images/' . $imageId . '/destroy');
-	}
+    public function destroyImage($imageId)
+    {
+        return self::request('/images/' . $imageId . '/destroy');
+    }
 
-	public function transferImage($imageId)
-	{
-		return self::request('/images/' . $imageId . '/transfer');
-	}
+    public function transferImage($imageId)
+    {
+        return self::request('/images/' . $imageId . '/transfer');
+    }
 
-	public function validateImage($imageId)
-	{
-		$found = false;
+    public function validateImage($imageId)
+    {
+        $found = false;
 
-		$checkoutImage = self::checkoutImage($imageId);
+        $checkoutImage = self::checkoutImage($imageId);
 
-		if($checkoutImage['status'] == 'OK')
-		{
-			$found = true;
-		}
+        if($checkoutImage['status'] == 'OK')
+        {
+            $found = true;
+        }
 
-		return $found;
-	}
-
-
+        return $found;
+    }
 
 
-	/**
-	* Sizes
-	*/
 
-	public function sizes()
-	{
-		return self::request('/sizes');
-	}
 
-	public function validateSize($sizeId)
-	{
-		$found = false;
+    /**
+    * Sizes
+    */
 
-		$sizes = self::sizes();
-		$sizes = $sizes['sizes'];
+    public function sizes()
+    {
+        return self::request('/sizes');
+    }
 
-		// Run through sizes
-		foreach($sizes as $value)
-		{
-			if($value['id'] == $sizeId)
-				$found = true;
-		}
+    public function validateSize($sizeId)
+    {
+        $found = false;
 
-		return $found;
-	}
-    
-    
-    
+        $sizes = self::sizes();
+        $sizes = $sizes['sizes'];
+
+        // Run through sizes
+        foreach($sizes as $value)
+        {
+            if($value['id'] == $sizeId)
+                $found = true;
+        }
+
+        return $found;
+    }
+
+
+
+
     /**
     * SSH Keys
     */
@@ -319,36 +322,37 @@ class digitalOcean
     public function keys()
     {
         return self::request('/ssh_keys');
-    }    
-    
+    }
+
     public function newKey($name, $ssh_pub_key)
     {
         $parameters = array('name' => $name, 'ssh_pub_key' => $ssh_pub_key);
         return self::request('/ssh_keys/new', $parameters);
     }
-    
-    public function checkoutKey($id)
+
+    public function checkoutKey($keyId)
     {
-        return self::request('/ssh_keys/' . $id);
+        return self::request('/ssh_keys/' . $keyId);
     }
-    
-    public function editKey($id, $ssh_pub_key)
+
+    public function editKey($keyId, $ssh_pub_key)
     {
         $parameters = array('ssh_pub_key' => $ssh_pub_key);
-        return self::request('/ssh_keys/' . $id . '/edit', $parameters);
-    }    
-    
-    public function destroyKey($id)
+        return self::request('/ssh_keys/' . $keyId . '/edit', $parameters);
+    }
+
+    public function destroyKey($keyId)
     {
-        return self::request('/ssh_keys/' . $id . '/destroy');
-    }    
-         
-         
+        return self::request('/ssh_keys/' . $keyId . '/destroy');
+    }
+
+
     /**
     * Events
     */
-    
-    public function checkoutEvent($id) {
-        return self::request('/events/' . $id);
-    }         
-} 
+
+    public function checkoutEvent($eventId)
+    {
+        return self::request('/events/' . $eventId);
+    }
+}
