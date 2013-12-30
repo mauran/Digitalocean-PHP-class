@@ -264,9 +264,10 @@ class digitalOcean
         return self::request('/images/' . $imageId . '/destroy');
     }
 
-    public function transferImage($imageId)
+    public function transferImage($imageId, $regionId)
     {
-        return self::request('/images/' . $imageId . '/transfer');
+        $parameters = array("region_id", $regionId);
+        return self::request('/images/' . $imageId . '/transfer', $parameters);
     }
 
     public function validateImage($imageId)
