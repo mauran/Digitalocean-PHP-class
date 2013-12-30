@@ -186,7 +186,9 @@ class digitalOcean
 
 	public function destroyDroplet($dropletId)
 	{
-		return self::request('/droplets/' . $dropletId . '/destroy');
+        // This is forced on, because there is no good reason to not have this.
+        $parameters = array("scrub_data" => true);
+		return self::request('/droplets/' . $dropletId . '/destroy', $parameters);
 	}
 
 	public function validateDroplet($dropletId)
@@ -341,4 +343,12 @@ class digitalOcean
         return self::request('/ssh_keys/' . $id . '/destroy');
     }    
          
+         
+    /**
+    * Events
+    */
+    
+    public function checkoutEvent($id) {
+        return self::request('/events/' . $id);
+    }         
 } 
