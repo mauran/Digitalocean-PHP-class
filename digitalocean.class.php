@@ -7,8 +7,6 @@
  * stuff. If we meet some day, and you think this stuff is worth it, you can
  * buy me a beer in return --Mauran Muthiah
  * ----------------------------------------------------------------------------
- *
- * Alterations/additions by dbfx for Snapt
  */
 
 class digitalOcean
@@ -311,8 +309,31 @@ class digitalOcean
     * SSH Keys
     */
 
-    public function ssh_keys()
+    public function keys()
     {
         return self::request('/ssh_keys');
     }    
+    
+    public function newKey($name, $ssh_pub_key)
+    {
+        $parameters = array('name' => $name, 'ssh_pub_key' => $ssh_pub_key);
+        return self::request('/ssh_keys/new', $parameters);
+    }
+    
+    public function checkoutKey($id)
+    {
+        return self::request('/ssh_keys/' . $id);
+    }
+    
+    public function editKey($id, $ssh_pub_key)
+    {
+        $parameters = array('ssh_pub_key' => $ssh_pub_key);
+        return self::request('/ssh_keys/' . $id . '/edit', $parameters);
+    }    
+    
+    public function destroyKey($id)
+    {
+        return self::request('/ssh_keys/' . $id . '/destroy');
+    }    
+         
 } 
