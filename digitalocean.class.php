@@ -330,20 +330,20 @@ class digitalOcean
 		return self::request('/ssh_keys/new', $parameters);
 	}
 
-	public function checkoutKey($id)
+	public function checkoutKey($keyId)
 	{
-		return self::request('/ssh_keys/' . $id);
+		return self::request('/ssh_keys/' . $keyId);
 	}
 
-	public function editKey($id, $ssh_pub_key)
+	public function editKey($keyId, $ssh_pub_key)
 	{
 		$parameters = array('ssh_pub_key' => $ssh_pub_key);
-		return self::request('/ssh_keys/' . $id . '/edit', $parameters);
+		return self::request('/ssh_keys/' . $keyId . '/edit', $parameters);
 	}
 
-	public function destroyKey($id)
+	public function destroyKey($keyId)
 	{
-		return self::request('/ssh_keys/' . $id . '/destroy');
+		return self::request('/ssh_keys/' . $keyId . '/destroy');
 	}
 
 
@@ -351,8 +351,8 @@ class digitalOcean
 	* Events
 	*/
 
-	public function checkoutEvent($id)
+	public function checkoutEvent($eventId)
 	{
-		return self::request('/events/' . $id);
+		return self::request('/events/' . $eventId);
 	}
 }
