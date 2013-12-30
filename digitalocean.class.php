@@ -7,6 +7,8 @@
  * stuff. If we meet some day, and you think this stuff is worth it, you can
  * buy me a beer in return --Mauran Muthiah
  * ----------------------------------------------------------------------------
+ *
+ * Alterations/additions by dbfx for Snapt
  */
 
 class digitalOcean
@@ -236,6 +238,7 @@ class digitalOcean
 
 	public function images($filter = '')
 	{
+        $parameters = array();
 		if($filter)
 		{
 			$parameters = array('filter' => $filter);
@@ -301,5 +304,15 @@ class digitalOcean
 
 		return $found;
 	}
-}
-?>
+    
+    
+    
+    /**
+    * SSH Keys
+    */
+
+    public function ssh_keys()
+    {
+        return self::request('/ssh_keys');
+    }    
+} 
