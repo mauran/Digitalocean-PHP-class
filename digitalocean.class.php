@@ -69,7 +69,7 @@ class digitalOcean
 		return self::request('/droplets');
 	}
 
-	public function newDroplet($name, $sizeId, $imageId, $regionId)
+	public function newDroplet($name, $sizeId, $imageId, $regionId, $ssh_key_ids = null, $private_networking = null)
 	{
 		// Validate informations
 		if(self::validateSize($sizeId) == false) {
@@ -81,6 +81,11 @@ class digitalOcean
 		}else{
 
 			$parameters = array('name' => $name, 'size_id' => $sizeId, 'image_id' => $imageId, 'region_id' => $regionId);
+            
+            // Optional
+            if (!is_null($ssh_key_ids)) $parameters['ssh_key_ids'] = $ssh_key_ids;
+            if (!is_null($private_networking)) $parameters['private_networking'] = $private_networking;
+            
 			return self::request('/droplets/new', $parameters);
 
 		}
