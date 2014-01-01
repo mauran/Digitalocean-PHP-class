@@ -356,4 +356,56 @@ class digitalOcean
     {
         return self::request('/events/' . $eventId);
     }
+    
+    
+    /**
+    * Domains
+    */
+
+    public function domains()
+    {
+        return self::request('/domains');
+    }  
+    
+    public function checkoutDomain($domainId)
+    {
+        return self::request('/domains/' . $domainId);
+    }        
+    
+    public function newDomain($name, $ip_address)
+    {
+        $parameters = array('name' => $name, 'ip_address' => $ip_address);
+        return self::request('/domains/new', $parameters);
+    }    
+    
+    public function destroyDomain($domainId)
+    {
+        return self::request('/domains/' . $domainId . '/destroy');
+    }
+    
+    public function records($domainId)
+    {
+        return self::request('/domains/' . $domainId . '/records');
+    }  
+    
+    public function checkoutRecord($domainId, $recordId)
+    {
+        return self::request('/domains/' . $domainId . '/records/' . $recordId);
+    }        
+    
+    public function newRecord($domainId, $parameters = array())
+    {        
+        return self::request('/domains/' . $domainId . '/records/new', $parameters);
+    } 
+    
+    public function editRecord($domainId, $recordId, $parameters = array())
+    {        
+        return self::request('/domains/' . $domainId . '/records/' . $recordId . '/edit', $parameters);
+    }        
+    
+    public function destroyRecord($domainId, $recordId)
+    {
+        return self::request('/domains/' . $domainId . 'records/' . $recordId . '/destroy');
+    }    
+
 }
